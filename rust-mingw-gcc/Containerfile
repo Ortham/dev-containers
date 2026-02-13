@@ -1,0 +1,16 @@
+FROM ghcr.io/ortham/dev-rust-windows-gnu:latest
+
+USER root
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    cbindgen \
+    cmake \
+    g++-mingw-w64-x86-64 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY toolchain-x86_64-mingw-w64.cmake /opt/cmake/toolchains/x86_64-mingw-w64.cmake
+
+USER vscode
+
+# Include the MinGW DLLs in Wine's search path so that C++ code built using WinGW works.
+ENV WINEPATH=/usr/lib/gcc/x86_64-w64-mingw32/14-win32
