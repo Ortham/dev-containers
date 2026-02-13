@@ -1,0 +1,38 @@
+name: 'Build and push image'
+
+description: 'Build and push a container image'
+inputs:
+  registry:
+    description: 'The container registry to push to'
+    required: true
+    default: 'ghcr.io'
+  context_path:
+    description: 'The context path to use when building the container, and the suffix to use in the image name'
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
+      with:
+        images: ${{ inputs.registry }}/dev-${{ inputs.context_path }}
+
+    - name: Build and push Docker image
+      id: push
+      uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+      with:
+        context: "{{defaultContext}}:${{ inputs.context_path }}"
+        file: Containerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Generate artifact attestation
+      uses: actions/attest-build-provenance@v3
+      with:
+        subject-name: ${{ inputs.registry }}/dev-${{ inputs.context_path }}
+        subject-digest: ${{ steps.push.outputs.digest }}
+        push-to-registry: true
