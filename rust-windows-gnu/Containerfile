@@ -1,4 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/rust:2-1-trixie
+LABEL org.opencontainers.image.source=https://github.com/Ortham/dev-containers
+LABEL org.opencontainers.image.description="Rust dev tools with the x86_64-pc-windows-gnu target."
+LABEL org.opencontainers.image.licenses=MIT
 
 RUN rustup target add x86_64-pc-windows-gnu \
     && rustup component add llvm-tools-preview

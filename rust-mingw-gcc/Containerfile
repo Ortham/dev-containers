@@ -1,4 +1,7 @@
 FROM ghcr.io/ortham/dev-rust-windows-gnu:latest
+LABEL org.opencontainers.image.source=https://github.com/Ortham/dev-containers
+LABEL org.opencontainers.image.description="C++ & Rust dev tools with the x86_64-pc-windows-gnu target."
+LABEL org.opencontainers.image.licenses=MIT
 
 USER root
 
