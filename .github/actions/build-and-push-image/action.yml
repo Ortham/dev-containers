@@ -21,6 +21,7 @@ runs:
         images: ${{ inputs.registry }}/dev-${{ inputs.context_path }}
 
     - name: Debug tags
+      shell: bash
       run: echo "${{ steps.meta.outputs.tags }}"
 
     - name: Build and push Docker image
